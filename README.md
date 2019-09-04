@@ -11,7 +11,7 @@ Hra má 2 herní fáze - normální a ďábelskou. Prvních pár tahů probíhá
 ### Konec hry
 Hráč prohrává v případě, že odhalil políčko s minou. Vyhrát může v normální fázi nebo v ďábelské fázi. V normální fázi hráč vyhrává tehdy, pokud odhalí všechna políčka, na kterých není mina. V ďábelské fázi hráč vyhrává tehdy, pokud na všech neodhalených políčkách musí být mina.
 
-# Ukázka hry v normálním režimu
+## Ukázka hry v normálním režimu
 ```
 $ mines.exe
 
@@ -61,7 +61,7 @@ input space-separated x y coordinates:
 5|* * 1 0 0 0
 ```
 
-# Ukázka stejného původního rozložení min, akorát ďábelská fáze nastane o krok dříve
+## Ukázka ďábelského režimu
 
 ```
 $ mines.exe
