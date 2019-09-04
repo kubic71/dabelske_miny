@@ -1,4 +1,4 @@
-# Dábelské miny
+# Ďábelské miny
 Hrají se stejně jako běžné hledání min, ale jsou ďábelské, pokud hráč odhalí políčko, na kterém může být mina, mina tam vždy bude. Hráč tedy může vyhrát pouze tehdy, pokud odhaluje políčka, na kterých mina zaručeně není.
 
 # Uživatelské dokumentace
