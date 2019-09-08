@@ -157,7 +157,79 @@ Zde je vidět, že ďábel zařídil, aby na políčku 3 0 byla mina, ač tam v 
 
 
 # Technická dokumentace
-Zde jsou uvedeny nejdůležitější funkce
+## Custom datové typy
+#### Point
+Ukládá souřadnice x,y nějakého políčka.
+
+#### Mines
+Představuje rozmístění min na herní ploše.
+
+#### Info
+Představuje stav nějakého políčka. Políčko může být neodkryté (Covered), nebo může být odkryté, a v tom případě má kolem sebe nějaký n sous edních min (Uncovered n)
+
+#### MinesInfo
+Ukládá Info o každém políčku herní plochy.
+
+#### MinePossibility
+Při ďábelském rozmísťování min je zakrytým políčkům postupně přiřazován stav, zdali zde mina je, či není. Políčko může mít stav Mine, NotMine nebo Unassigned. 
+
+
+## Funkce
  
-###`askPlayerForGameParams`
-Po spuštění hry se nejdříve vyžádají herní parametry od uživatele. 
+#### askPlayerForGameParams
+Po spuštění hry se nejdříve vyžádají herní parametry od uživatele, funkce vrátí trojici velikost_pole, počet min, počet tahů normální fáze. Funkce validuje zadané hodnoty.
+
+#### safelyGetNumberFromPlayer
+Vyžádá si od hráče číslo, kontroluje, zda hráč opravdu zadal číslo.
+
+#### getPlayerChoice
+Vrací políčko, které chce hráč odkrýt. Robustně ošetřuje vstup.
+
+#### placeMinesRandomly
+Vrátí náhodné rozmístění min. Žádné 2 miny se nepřekrývají.
+
+#### getRandomPoint
+Vrátí náhodné políčko na herní ploše a nový stav náhodného generátoru.
+
+#### getCoveredBoard
+Zinicializuje MinesInfo, všechna políčka jsou zakrytá.
+
+#### getNeighbouringPoints
+Vrátí seznam políček, které sousedí s daným políčkem
+
+#### playGame
+Hlavní herní smyčka (herní rekurze). Pamatuje si herní stav (tj. Odkrytí plochy, počty okolních min odkrytých políček, rozložení min, kolik tahů zbývá do zďábelštění)
+
+#### printBoard
+Vykresluje herní stav.
+
+#### showMinePlacement
+Po skončení hry odhalí hráči rozložení min.
+
+#### isMineHere
+Zjistí, zdali je na zadaném políčku mina.
+
+#### uncoverSafeCells
+Odkryje požadované políčko. Pokud toto políčko nesousedí s žádnou minou, odkryje rekurzivně všechna sousední políčka. Volá funkci `recursivelyUncoverSafeCells` 
+
+#### playerHasWonNormal
+Vrací Bool, zdali hráč vyhrál v normálním režimu hry.
+
+#### playerHasWonDevil
+Vrací Bool, zdali hráč vyhrál v ďábelském režimu hry.
+
+#### generateDevilMines
+Funkce vrátí Maybe rozložení min, které má na danném políčku minu. Pokud žádné takové neexistuje, vrátí Nothing. Je to high level interface k funkci `generateMines`
+
+#### generateMines
+Funkce bere jako parametry informaci, kterou má hráč (MinesInfo), seznam zakrytých políček s informací, zda na tomto políčku má/nemá být mina, či zda o tom ještě nebylo rozhodnuto a index, od kterého prvku v seznamu může začít měnit stavy políčkům. Vrací Maybe seznam min, odpovídající constrains v parametrech. Vrací Nothing, pokud žádná konfigurace min odpovíající požadavkům neexistuje.
+
+#### checkPartialPlacement  
+Zkontroluje, zdali částečné přiřazení stavů zakrytým políčkům není v rozporu s už odhalenou informací, kterou vidí hráč. Kontroluje políčko po políčku, na každé volá `checkOneSquare`
+
+#### getInfo a changeInfo
+Pracuje s objektem MinesInfo. Vytahuje/ukládá informace o jednotlivých políčkách.
+
+ 
+ 
+ 
