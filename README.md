@@ -45,12 +45,12 @@ input space-separated x y coordinates:
 ## Herní fáze 
 Hra má 2 herní fáze - normální a ďábelskou. 
 ### Normální herní fáze
-Hra začíná v normálním režimu a po zadaném počtu tahů se hra zďábelští. V normální fázi se hra hraje stejně, jako běžný MineSweeper. Nazačátku hry je na herní ploše náhodně rozmístěn zadaný počet min, které jsou před hráčem skryty. Hrač postupně odkrývá políčka, počet min ani jejich pozice se nemění. Tato první fáze slouží k částečnému odhalení herní plochy, aby hra byla vůbec hratelná. Poté se po určitém počtu kroků hra přepne do oné ďábelské fáze.   
+Hra začíná v normálním režimu a po zadaném počtu tahů se hra zďábelští. V normální fázi se hra hraje stejně, jako běžný MineSweeper. Na začátku hry je na herní ploše náhodně rozmístěn zadaný počet min, které jsou před hráčem skryty. Hrač postupně odkrývá políčka, počet min ani jejich pozice se nemění. Tato první fáze slouží k částečnému odhalení herní plochy, aby hra byla vůbec hratelná. Poté se po určitém počtu kroků hra přepne do oné ďábelské fáze.   
 ### Ďábelská herní fáze
-Pro jednu poloodkrytou herní plochu může existovat více rozmístění min. Pokud hráč odkryje políčko, na kterém je mina alespoň v jednom takovém rozmístění, mina tam vždy bude. Pokud hráč odkryje políčko, které neobsahuje minu ani v jednom přípustném rozmístění min, mina tam není. Jedno přípustné rozmístění min se poté použije na spočítání sousedních min právě odkrytého políčka.    
+Pro jednu poloodkrytou herní plochu může existovat více rozmístění min. Pokud hráč odkryje políčko, na kterém je mina alespoň v jednom takovém rozmístění, mina tam vždy bude. Pokud hráč odkryje políčko, které neobsahuje minu ani v jednom přípustném rozmístění min, mina tam není. Jedno přípustné rozmístění min se poté použije na spočtení počtu sousedních min právě odkrytého políčka.    
 
 ### Konec hry
-Hráč prohrává v případě, že odhalil políčko s minou. Vyhrát může v normální fázi nebo v ďábelské fázi. V normální fázi hráč vyhrává tehdy, pokud odhalí všechna políčka, na kterých není mina. V ďábelské fázi nemají miny fixní polohu a ani jich není fixní počet. Proto hráč vyhrává tehdy, pokud na všech neodhalených políčkách musí být mina.
+Hráč prohrává v případě, že odhalil políčko s minou. Vyhrát může v normální fázi nebo v ďábelské fázi. V normální fázi hráč vyhrává tehdy, pokud odhalí všechna políčka, na kterých není mina. V ďábelské fázi nemají miny fixní polohu a ani jejich počet není fixní. Proto hráč vyhrává tehdy, pokud na všech neodhalených políčkách musí být mina.
 
 ## Ukázka hry v normálním režimu
 ```
@@ -154,3 +154,10 @@ You lost!
 
 ```
 Zde je vidět, že ďábel zařídil, aby na políčku 3 0 byla mina, ač tam v normálním režimu nebyla.
+
+
+# Technická dokumentace
+Zde jsou uvedeny nejdůležitější funkce
+ 
+###`askPlayerForGameParams`
+Po spuštění hry se nejdříve vyžádají herní parametry od uživatele. 
