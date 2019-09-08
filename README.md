@@ -165,7 +165,7 @@ Ukládá souřadnice x,y nějakého políčka.
 Představuje rozmístění min na herní ploše.
 
 #### Info
-Představuje stav nějakého políčka. Políčko může být neodkryté (Covered), nebo může být odkryté, a v tom případě má kolem sebe nějaký n sous edních min (Uncovered n)
+Představuje stav nějakého políčka. Políčko může být neodkryté (Covered), nebo může být odkryté, a v tom případě má kolem sebe n sousedních min (Uncovered n)
 
 #### MinesInfo
 Ukládá Info o každém políčku herní plochy.
@@ -219,7 +219,7 @@ Vrací Bool, zdali hráč vyhrál v normálním režimu hry.
 Vrací Bool, zdali hráč vyhrál v ďábelském režimu hry.
 
 #### generateDevilMines
-Funkce vrátí Maybe rozložení min, které má na danném políčku minu. Pokud žádné takové neexistuje, vrátí Nothing. Je to high level interface k funkci `generateMines`
+Funkce vrátí Maybe rozložení min, které má na daném políčku minu. Pokud žádné takové neexistuje, vrátí Nothing. Je to high level interface k funkci `generateMines`
 
 #### generateMines
 Funkce bere jako parametry informaci, kterou má hráč (MinesInfo), seznam zakrytých políček s informací, zda na tomto políčku má/nemá být mina, či zda o tom ještě nebylo rozhodnuto a index, od kterého prvku v seznamu může začít měnit stavy políčkům. Vrací Maybe seznam min, odpovídající constrains v parametrech. Vrací Nothing, pokud žádná konfigurace min odpovíající požadavkům neexistuje.
