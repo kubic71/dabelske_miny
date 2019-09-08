@@ -1,15 +1,56 @@
 # Ďábelské miny
 Hrají se stejně jako běžné hledání min, ale jsou ďábelské, pokud hráč odhalí políčko, na kterém může být mina, mina tam vždy bude. Hráč tedy může vyhrát pouze tehdy, pokud odhaluje políčka, na kterých mina zaručeně není.
 
-# Uživatelské dokumentace
+# Uživatelská dokumentace
 ### Spuštění 
 Před spuštěním je třeba hru nejdříve zkompilovat: `ghc mines.hs`, poté stačí zkompilovanou hru z příkazové řádky sputit.
 ### Ovládání 
-Hra se ovládá z příkazové řádky. Při každém tahu se zobrazí hráči hrací plocha a hráč zadáním souřadnic zvolí, které políčko chce odkrýt.
-### Herní fáze 
-Hra má 2 herní fáze - normální a ďábelskou. Prvních pár tahů probíhá stejně jako v obyčejných minách. Tato první fáze slouží k částečnému odhalení herní plochy, aby hra byla vůbec hratelná. Poté se po určitém počtu kroků hra přepne do oné ďábelské fáze. 
+Hra se ovládá z příkazové řádky. Při spuštění je umožněno hráči zadat parametry hry (velikost pole, počet min, čas do zďábelštění).
+```
+$ mines.exe
+
+Do you want to play with default game parameters? (y/n):
+n
+Choose size of playing board:
+5
+Input number of mines:
+8
+Input number of moves before devil mode starts:
+4
+  0 1 2 3 4
+ ----------
+0|* * * * *
+1|* * * * *
+2|* * * * *
+3|* * * * *
+4|* * * * *
+Devil mode: INACTIVE YET
+Devil mode countdown: 4
+input space-separated x y coordinates:
+``` 
+
+Po zadání parametrů se spustí samotná hra. Při každém tahu se hráči zobrazí hrací plocha a hráč zadáním souřadnic zvolí, které políčko chce odkrýt.
+``` 
+input space-separated x y coordinates:
+1 3
+  0 1 2 3 4
+ ----------
+0|* * * * *
+1|* * * * *
+2|* * * * *
+3|* 4 * * *
+4|* * * * *
+```
+
+## Herní fáze 
+Hra má 2 herní fáze - normální a ďábelskou. 
+### Normální herní fáze
+Hra začíná v normálním režimu a po zadaném počtu tahů se hra zďábelští. V normální fázi se hra hraje stejně, jako běžný MineSweeper. Nazačátku hry je na herní ploše náhodně rozmístěn zadaný počet min, které jsou před hráčem skryty. Hrač postupně odkrývá políčka, počet min ani jejich pozice se nemění. Tato první fáze slouží k částečnému odhalení herní plochy, aby hra byla vůbec hratelná. Poté se po určitém počtu kroků hra přepne do oné ďábelské fáze.   
+### Ďábelská herní fáze
+Pro jednu poloodkrytou herní plochu může existovat více rozmístění min. Pokud hráč odkryje políčko, na kterém je mina alespoň v jednom takovém rozmístění, mina tam vždy bude. Pokud hráč odkryje políčko, které neobsahuje minu ani v jednom přípustném rozmístění min, mina tam není. Jedno přípustné rozmístění min se poté použije na spočítání sousedních min právě odkrytého políčka.    
+
 ### Konec hry
-Hráč prohrává v případě, že odhalil políčko s minou. Vyhrát může v normální fázi nebo v ďábelské fázi. V normální fázi hráč vyhrává tehdy, pokud odhalí všechna políčka, na kterých není mina. V ďábelské fázi hráč vyhrává tehdy, pokud na všech neodhalených políčkách musí být mina.
+Hráč prohrává v případě, že odhalil políčko s minou. Vyhrát může v normální fázi nebo v ďábelské fázi. V normální fázi hráč vyhrává tehdy, pokud odhalí všechna políčka, na kterých není mina. V ďábelské fázi nemají miny fixní polohu a ani jich není fixní počet. Proto hráč vyhrává tehdy, pokud na všech neodhalených políčkách musí být mina.
 
 ## Ukázka hry v normálním režimu
 ```

@@ -5,6 +5,7 @@ import Control.Monad(when)
 import qualified Data.Map as M
 import qualified Data.List as L
 import qualified Data.Set as S
+import qualified Data.Char as C
 
 
 
@@ -114,14 +115,13 @@ modifyNth n fun (x:xs)
     | otherwise = x:(modifyNth (n-1) fun xs)
 
 -- helper function for generateDevilMines
--- given minesInfo, possitions of possibleMines
 generateMines :: MinesInfo -> [(Point, MinePossibility)] -> Int -> Maybe [Point]
 generateMines minesInfo minesAssignment i = if placementConsistent then (
 
         -- if placement is consistent and all covered squares have assigned mine value, return mine assignment
         if (i == (length minesAssignment)) then Just (map (\(p, state) -> p) $ filter (\(p, state) -> state == Mine) minesAssignment)
 
-        -- no all covered squares have assigned mine value
+        -- not all covered squares have assigned mine value
         else (
             -- try assigning Mine and NotMine state to i-th covered square, which is the first Unassigned square
             let result_mine = generateMines minesInfo (modifyNth i (\(p, state) -> (p, Mine)) minesAssignment) (i+1)
@@ -170,23 +170,87 @@ showMinePlacement minesInfo mines size = printBoard newMinesInfo mines size True
     where newMinesInfo = foldl (\old_info p -> changeInfo old_info p (Uncovered $ getNumberOfMinesAround mines p size) ) minesInfo [Point x y | x <- [0..size-1], y <- [0..size-1]]
 
 
--- player has won when every uncovered square contains a mine
+-- player has won when every covered square contains a mine
 playerHasWonNormal :: MinesInfo -> Mines -> Int -> Bool
 playerHasWonNormal minesInfo mines size = all (isMineHere mines) $ getCoveredSquares minesInfo size
 
 
--- player has won in devil mode, when every uncovered square must contain mine
+-- player has won in devil mode, when every covered square must contain mine
 playerHasWonDevil :: MinesInfo -> Int -> Bool
 playerHasWonDevil minesInfo size = all (\p -> null $ generateMines minesInfo (initialAssignment minesInfo size p) 1) $ getCoveredSquares minesInfo size
     where initialAssignment minesInfo size point = (point, NotMine):(map (\p -> (p, Unassigned)) $ L.delete point $ getCoveredSquares minesInfo size)
 
-getPlayerChoice :: IO Point
-getPlayerChoice = do
+
+askPlayerForGameParams :: IO (Int, Int, Int)
+askPlayerForGameParams = do
+    putStrLn "Do you want to play with default game parameters? (y/n):"
+    defaultChoice <- getLine
+    let wds = (words defaultChoice) ++ ["y"]
+
+    -- if player chose default game params 
+    if ((C.toLower $ head.head $ wds) == 'y') then ( do
+
+        -- ### default game parameters  ###
+        let size = 6
+            n_mines = 5
+            devil_countdown = 3
+
+        return (size,n_mines,devil_countdown)
+        )    
+    else (do
+        putStrLn "Choose size of playing board:"
+        size <- safelyGetNumberFromPlayer 2 50
+        
+        putStrLn "Input number of mines:"
+        n_mines <- safelyGetNumberFromPlayer 0 (size*size - 1 )
+
+        putStrLn "Input number of moves before devil mode starts:"
+        devil_countdown <- safelyGetNumberFromPlayer 0 (maxBound :: Int)
+
+        return (size, n_mines, devil_countdown)
+        )
+
+isNumber :: String -> Bool
+isNumber strNumber = all (\c -> C.isNumber c) strNumber
+
+safelyGetNumberFromPlayer :: Int -> Int -> IO Int
+safelyGetNumberFromPlayer from to = do
+    input <- getLine
+    let stripped = filter (/=' ') input
+
+    -- input contains only numbers and not other characters beside space
+    if ((all (\c -> C.isNumber c) stripped) && stripped /= "") then do
+        let number = read stripped :: Int
+        if (from <= number && number <= to) then 
+            return number
+        else do
+            putStrLn $ "Number must be in range from " ++ (show from) ++ " to " ++ (show to) ++ "!!! Try again:"
+            safelyGetNumberFromPlayer from to
+    else do
+        putStrLn "You didn't put in number! Try again:"
+        safelyGetNumberFromPlayer from to
+        
+
+
+getPlayerChoice :: Int -> IO Point
+getPlayerChoice size = do
+
     putStrLn "input space-separated x y coordinates:"
     input <- getLine
-    let x:y:_ = map read $ words input :: [Int]
-    -- putStrLn $ "Your input coords are " ++ (show x) ++ " " ++ (show y) 
-    return $ Point x y
+
+    let strCoords = words input
+
+    if ((length strCoords == 2) && (all isNumber strCoords)) then do
+        let x:y:_ = map read $ strCoords :: [Int]
+        if (all (\c -> 0 <= c && c < size) [x, y]) then
+            return $ Point x y
+        else do
+            putStrLn "You must select square inside playing board!"
+            getPlayerChoice size
+    else do
+        putStrLn "You didn't input x y coordinates correctly, try again:"
+        getPlayerChoice size
+
 
 
 playGame mines minesInfo gameInfo devil_countdown = do
@@ -200,7 +264,7 @@ playGame mines minesInfo gameInfo devil_countdown = do
         putStrLn $ "Devil mode countdown: " ++ (show devil_countdown)
         )
 
-    choice <- getPlayerChoice
+    choice <- getPlayerChoice size
 
     
     let devil_mines = Mines (
@@ -242,11 +306,10 @@ playGame mines minesInfo gameInfo devil_countdown = do
     
 
 main = do
-    let size = 6
-        n_mines = 5
-        devil_countdown = 3
-        gen = mkStdGen 42
-        mines = placeMinesRandomly gen size n_mines emptyBoard
+    (size, n_mines, devil_countdown) <- askPlayerForGameParams
+
+    gen <- newStdGen
+    let mines = placeMinesRandomly gen size n_mines emptyBoard
         minesInfo = getCoveredBoard size
 
     playGame mines minesInfo (GameInfo size) devil_countdown
